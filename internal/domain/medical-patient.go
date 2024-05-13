@@ -7,31 +7,31 @@ import (
 )
 
 type MedicalPatient struct {
-	ID                  string    `db:"id"`
-	CreatedAt           time.Time `db:"created_at"`
-	IdentityNumber      int       `db:"identity_number"`
-	PhoneNumber         string    `db:"phone_number"`
-	Name                string    `db:"name"`
-	BirthDate           string    `db:"birth_date"`
-	Gender              string    `db:"gender"`
+	ID             string    `db:"id"`
+	CreatedAt      time.Time `db:"created_at"`
+	IdentityNumber int       `db:"identity_number"`
+	PhoneNumber    string    `db:"phone_number"`
+	Name           string    `db:"name"`
+	BirthDate      string    `db:"birth_date"`
+	Gender         string    `db:"gender"`
 	IDCardImg      string    `db:"id_card_img"`
 }
 
 type CreateMedicalPatient struct {
-	IdentityNumber      int    `json:"identity_number"`
-	PhoneNumber         string `json:"phone_number"`
-	Name                string `json:"name"`
-	BirthDate           string `json:"birth_date"`
-	Gender              string `json:"gender"`
+	IdentityNumber int    `json:"identityNumber"`
+	PhoneNumber    string `json:"phoneNumber"`
+	Name           string `json:"name"`
+	BirthDate      string `json:"birthDate"`
+	Gender         string `json:"gender"`
 	IDCardImg      string `json:"identityCardScanImg"`
 }
 
 type GetMedicalPatient struct {
 	CreatedAt      time.Time `json:"createdAt"`
-	IdentityNumber int       `json:"identity_number"`
-	PhoneNumber    string    `json:"phone_number"`
+	IdentityNumber int       `json:"identityNumber"`
+	PhoneNumber    string    `json:"phoneNumber"`
 	Name           string    `json:"name"`
-	BirthDate      string    `json:"birth_date"`
+	BirthDate      string    `json:"birthDate"`
 	Gender         string    `json:"gender"`
 }
 
@@ -41,13 +41,13 @@ func (cmp *CreateMedicalPatient) NewMedicalPatienFromDTO() MedicalPatient {
 	createdAt, _ := time.Parse(time.RFC3339, rawCreatedAt)
 
 	return MedicalPatient{
-		ID:                  id.String(),
-		CreatedAt:           createdAt,
-		IdentityNumber:      cmp.IdentityNumber,
-		PhoneNumber:         cmp.PhoneNumber,
-		Name:                cmp.Name,
-		BirthDate:           cmp.BirthDate,
-		Gender:              cmp.Gender,
+		ID:             id.String(),
+		CreatedAt:      createdAt,
+		IdentityNumber: cmp.IdentityNumber,
+		PhoneNumber:    cmp.PhoneNumber,
+		Name:           cmp.Name,
+		BirthDate:      cmp.BirthDate,
+		Gender:         cmp.Gender,
 		IDCardImg:      cmp.IDCardImg,
 	}
 }
