@@ -9,26 +9,26 @@ import (
 type UserIT struct {
 	ID        string    `db:"id"`
 	CreatedAt time.Time `db:"created_at"`
-	Nip       int       `db:"nip"`
+	NIP       int       `db:"nip"`
 	Name      string    `db:"name"`
 	Password  string    `db:"password"`
 	Role      string    `db:"role"`
 }
 
 type RegisterUserIT struct {
-	Nip      int    `json:"nip"`
+	NIP      int    `json:"nip"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
 }
 
 type LoginUserIT struct {
-	Nip      int    `json:"nip"`
+	NIP      int    `json:"nip"`
 	Password string `json:"password"`
 }
 
 type GetUserIT struct {
 	ID        string    `json:"userId"`
-	Nip       int       `json:"nip"`
+	NIP       int       `json:"nip"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"createdAt"`
 }
@@ -41,7 +41,7 @@ func (u RegisterUserIT) NewUserITFromDTO() UserIT {
 	return UserIT{
 		ID:        id.String(),
 		CreatedAt: createdAt,
-		Nip:       u.Nip,
+		NIP:       u.NIP,
 		Name:      u.Name,
 		Password:  u.Password,
 		Role:      "it",

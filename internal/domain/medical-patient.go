@@ -14,7 +14,7 @@ type MedicalPatient struct {
 	Name                string    `db:"name"`
 	BirthDate           string    `db:"birth_date"`
 	Gender              string    `db:"gender"`
-	IdentityCardScanImg string    `db:"id_card_img"`
+	IDCardImg      string    `db:"id_card_img"`
 }
 
 type CreateMedicalPatient struct {
@@ -23,7 +23,7 @@ type CreateMedicalPatient struct {
 	Name                string `json:"name"`
 	BirthDate           string `json:"birth_date"`
 	Gender              string `json:"gender"`
-	IdentityCardScanImg string `json:"id_card_img"`
+	IDCardImg      string `json:"identityCardScanImg"`
 }
 
 type GetMedicalPatient struct {
@@ -48,6 +48,6 @@ func (cmp *CreateMedicalPatient) NewMedicalPatienFromDTO() MedicalPatient {
 		Name:                cmp.Name,
 		BirthDate:           cmp.BirthDate,
 		Gender:              cmp.Gender,
-		IdentityCardScanImg: cmp.IdentityCardScanImg,
+		IDCardImg:      cmp.IDCardImg,
 	}
 }

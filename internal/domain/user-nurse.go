@@ -9,17 +9,17 @@ import (
 type UserNurse struct {
 	ID        string    `db:"id"`
 	CreatedAt time.Time `db:"created_at"`
-	Nip       int       `db:"nip"`
+	NIP       int       `db:"nip"`
 	Name      string    `db:"name"`
-	IdCardImg string    `db:"id_card_img"`
+	IDCardImg string    `db:"id_card_img"`
 	Password  string    `db:"password"`
 	Role      string    `db:"role"`
 }
 
 type RegisterUserNurse struct {
-	Nip                 int    `json:"nip"`
-	Name                string `json:"name"`
-	IdentityCardScanImg string `json:"identityCardScanImg"`
+	NIP       int    `json:"nip"`
+	Name      string `json:"name"`
+	IDCardImg string `json:"identityCardScanImg"`
 }
 
 type AccessSystemUserNurse struct {
@@ -27,13 +27,13 @@ type AccessSystemUserNurse struct {
 }
 
 type LoginUserNurse struct {
-	Nip      int    `json:"nip"`
+	NIP      int    `json:"nip"`
 	Password string `json:"password"`
 }
 
 type GetUserNurse struct {
 	ID        string    `json:"userId"`
-	Nip       int       `json:"nip"`
+	NIP       int       `json:"nip"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"createdAt"`
 }
@@ -46,10 +46,9 @@ func (u RegisterUserNurse) NewUserNurseFromDTO() UserNurse {
 	return UserNurse{
 		ID:        id.String(),
 		CreatedAt: createdAt,
-		Nip:       u.Nip,
+		NIP:       u.NIP,
 		Name:      u.Name,
-		IdCardImg: u.IdentityCardScanImg,
-		Password:  u.Password,
+		IDCardImg: u.IDCardImg,
 		Role:      "nurse",
 	}
 }
