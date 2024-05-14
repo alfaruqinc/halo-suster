@@ -17,18 +17,18 @@ type UserNurse struct {
 }
 
 type RegisterUserNurse struct {
-	NIP       int    `json:"nip"`
-	Name      string `json:"name"`
-	IDCardImg string `json:"identityCardScanImg"`
+	NIP       *int   `json:"nip" validate:"required,nip=nurse"`
+	Name      string `json:"name" validate:"required,min=5,max=50"`
+	IDCardImg string `json:"identityCardScanImg" validate:"required,url"`
 }
 
 type AccessSystemUserNurse struct {
-	Password string `json:"password"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
 type LoginUserNurse struct {
-	NIP      int    `json:"nip"`
-	Password string `json:"password"`
+	NIP      *int   `json:"nip" validate:"required,nip=nurse"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
 type GetUserNurse struct {
@@ -46,7 +46,7 @@ func (u RegisterUserNurse) NewUserNurseFromDTO() UserNurse {
 	return UserNurse{
 		ID:        id.String(),
 		CreatedAt: createdAt,
-		NIP:       u.NIP,
+		NIP:       *u.NIP,
 		Name:      u.Name,
 		IDCardImg: u.IDCardImg,
 		Role:      "nurse",
