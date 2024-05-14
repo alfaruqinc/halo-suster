@@ -18,12 +18,12 @@ type MedicalPatient struct {
 }
 
 type CreateMedicalPatient struct {
-	IdentityNumber int    `json:"identityNumber"`
-	PhoneNumber    string `json:"phoneNumber"`
-	Name           string `json:"name"`
-	BirthDate      string `json:"birthDate"`
-	Gender         string `json:"gender"`
-	IDCardImg      string `json:"identityCardScanImg"`
+	IdentityNumber int    `json:"identityNumber" validate:"required,intlen=16"`
+	PhoneNumber    string `json:"phoneNumber" validate:"required,startswith=+62,min=10,max=15"`
+	Name           string `json:"name" validate:"required,min=3,max=30"`
+	BirthDate      string `json:"birthDate" validate:"required,iso8601"`
+	Gender         string `json:"gender" validate:"required,oneof=male female"`
+	IDCardImg      string `json:"identityCardScanImg" validate:"required,url"`
 }
 
 type GetMedicalPatient struct {
