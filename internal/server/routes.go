@@ -1,6 +1,8 @@
 package server
 
 import (
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -15,6 +17,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	s.App.Get("/health", s.healthHandler)
 
 	validate.RegisterValidation("nip", nipValidation)
+	validate.RegisterValidation("url", urlValidation)
 }
 
 func nipValidation(fl validator.FieldLevel) bool {
@@ -56,6 +59,21 @@ func nipValidation(fl validator.FieldLevel) bool {
 
 	return true
 }
+
+func urlValidation(fl validator.FieldLevel) bool {
+	urlString := fl.Field().String()
+	if !strings.Contains(urlString, ".") {
+		return false
+	}
+	_, err := url.ParseRequestURI(urlString)
+	if err != nil {
+		return false
+	}
+	u, err := url.Parse(urlString)
+	if err != nil || u.Scheme == "" || u.Host == "" {
+		return false
+	}
+	return true
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
