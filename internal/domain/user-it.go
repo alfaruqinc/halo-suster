@@ -16,14 +16,14 @@ type UserIT struct {
 }
 
 type RegisterUserIT struct {
-	NIP      int    `json:"nip"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	NIP      *int   `json:"nip" validate:"required,nip=it"`
+	Name     string `json:"name" validate:"required,min=5,max=50"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
 type LoginUserIT struct {
-	NIP      int    `json:"nip"`
-	Password string `json:"password"`
+	NIP      *int   `json:"nip" validate:"required,nip=it"`
+	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
 type GetUserIT struct {
@@ -41,7 +41,7 @@ func (u RegisterUserIT) NewUserITFromDTO() UserIT {
 	return UserIT{
 		ID:        id.String(),
 		CreatedAt: createdAt,
-		NIP:       u.NIP,
+		NIP:       *u.NIP,
 		Name:      u.Name,
 		Password:  u.Password,
 		Role:      "it",
