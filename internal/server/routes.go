@@ -20,6 +20,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	validate.RegisterValidation("nip", nipValidation)
 	validate.RegisterValidation("url", urlValidation)
 	validate.RegisterValidation("intlen", intLenValidation)
+	validate.RegisterValidation("iso8601", iso8601Validation)
 }
 
 func nipValidation(fl validator.FieldLevel) bool {
@@ -91,6 +92,13 @@ func intLenValidation(fl validator.FieldLevel) bool {
 	}
 
 	return n == param
+}
+
+func iso8601Validation(fl validator.FieldLevel) bool {
+	field := fl.Field().String()
+	_, err := time.Parse(time.RFC3339, field)
+
+	return err == nil
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
