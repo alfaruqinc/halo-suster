@@ -17,9 +17,9 @@ type MedicalRecord struct {
 }
 
 type CreateMedicalRecord struct {
-	IdentityNumber int    `json:"identityNumber"`
-	Symptoms       string `json:"symptoms"`
-	Medications    string `json:"medications"`
+	IdentityNumber int    `json:"identityNumber" validate:"required,intlen=16"`
+	Symptoms       string `json:"symptoms" validate:"required,min=1,max=2000"`
+	Medications    string `json:"medications" validate:"required,min=1,max=2000"`
 }
 
 type GetMedicalRecord struct {
