@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,6 +19,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 
 	validate.RegisterValidation("nip", nipValidation)
 	validate.RegisterValidation("url", urlValidation)
+	validate.RegisterValidation("intlen", intLenValidation)
 }
 
 func nipValidation(fl validator.FieldLevel) bool {
@@ -74,6 +76,21 @@ func urlValidation(fl validator.FieldLevel) bool {
 		return false
 	}
 	return true
+}
+
+func intLenValidation(fl validator.FieldLevel) bool {
+	field := fl.Field().Int()
+	param, err := strconv.Atoi(fl.Param())
+	if err != nil {
+		return false
+	}
+
+	n := 0
+	for ; field > 0; field /= 10 {
+		n++
+	}
+
+	return n == param
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
