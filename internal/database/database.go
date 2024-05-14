@@ -42,6 +42,10 @@ func New() Service {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Set connection pool parameters
+	db.SetMaxOpenConns(100)
+	db.SetMaxIdleConns(90)
+	db.SetConnMaxLifetime(5 * time.Minute)
 
 	dbInstance = &service{
 		db: db,
