@@ -36,7 +36,7 @@ type UserNurseResponse struct {
 	ID          string `json:"userId"`
 	NIP         int64  `json:"nip"`
 	Name        string `json:"name"`
-	AccessToken string `json:"accessToken"`
+	AccessToken string `json:"accessToken,omitempty"`
 }
 
 type GetUserNurse struct {
