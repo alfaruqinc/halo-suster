@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 var (
@@ -31,7 +32,9 @@ func (s *FiberServer) RegisterFiberRoutes() {
 
 	userITService := service.NewUserIT(s.db.GetDB(), jwtSecret, bcryptSalt, userITRepository)
 
-	userITHandler := handler.NewUserIT(userITService)
+	userITHandler := handler.NewUserIT(validate, userITService)
+
+	s.App.Use(recover.New())
 
 	apiV1 := s.App.Group("/v1")
 
