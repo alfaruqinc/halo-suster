@@ -10,6 +10,7 @@ import (
 )
 
 type UserNurse interface {
+	Register() fiber.Handler
 	Login() fiber.Handler
 }
 
@@ -22,6 +23,23 @@ func NewUserNurse(validator *validator.Validate, userNurseService service.UserNu
 	return &userNurse{
 		validator:        validator,
 		userNurseService: userNurseService,
+	}
+}
+
+func (un *userNurse) Register() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		body := new(domain.RegisterUserNurse)
+		ctx.BodyParser(&body)
+
+		nurse := body.NewUserNurseFromDTO()
+		resp, err := un.userNurseService.Register(ctx.Context(), nurse)
+		if err != nil {
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		nurseCreated := domain.NewStatusCreated("success register nurse", resp)
+
+		return ctx.Status(nurseCreated.Status()).JSON(nurseCreated)
 	}
 }
 
