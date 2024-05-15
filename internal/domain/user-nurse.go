@@ -1,19 +1,20 @@
 package domain
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/oklog/ulid/v2"
 )
 
 type UserNurse struct {
-	ID        string    `db:"id"`
-	CreatedAt time.Time `db:"created_at"`
-	NIP       int       `db:"nip"`
-	Name      string    `db:"name"`
-	IDCardImg string    `db:"id_card_img"`
-	Password  string    `db:"password"`
-	Role      string    `db:"role"`
+	ID        string         `db:"id"`
+	CreatedAt time.Time      `db:"created_at"`
+	NIP       int64          `db:"nip"`
+	Name      string         `db:"name"`
+	IDCardImg string         `db:"id_card_img"`
+	Password  sql.NullString `db:"password"`
+	Role      string         `db:"role"`
 }
 
 type RegisterUserNurse struct {
