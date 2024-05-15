@@ -53,6 +53,11 @@ func (uit *userIT) Login() fiber.Handler {
 		body := new(domain.LoginUserIT)
 		ctx.BodyParser(&body)
 
+		if err := uit.validator.Struct(body); err != nil {
+			err := helper.ValidateRequest(err)
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
 		resp, err := uit.userService.Login(ctx.Context(), *body)
 		if err != nil {
 			return ctx.Status(err.Status()).JSON(err)
