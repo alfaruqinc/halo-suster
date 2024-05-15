@@ -13,6 +13,7 @@ import (
 )
 
 type UserNurse interface {
+	Register(ctx context.Context, nurse domain.UserNurse) (*domain.UserNurseResponse, domain.ErrorMessage)
 	Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage)
 }
 
@@ -30,6 +31,21 @@ func NewUserNurse(db *sqlx.DB, jwtSecret string, bcryptSalt string, userNurseRep
 		bcryptSalt:    bcryptSalt,
 		userNurseRepo: userNurseRepo,
 	}
+}
+
+func (un *userNurse) Register(ctx context.Context, nurse domain.UserNurse) (*domain.UserNurseResponse, domain.ErrorMessage) {
+	err := un.userNurseRepo.Register(ctx, un.db, nurse)
+	if err != nil {
+		return nil, domain.NewErrInternalServerError(err.Error())
+	}
+
+	registerResp := domain.UserNurseResponse{
+		ID:   nurse.ID,
+		NIP:  nurse.NIP,
+		Name: nurse.Name,
+	}
+
+	return &registerResp, nil
 }
 
 func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage) {
