@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -36,6 +37,12 @@ func NewUserNurse(db *sqlx.DB, jwtSecret string, bcryptSalt string, userNurseRep
 func (un *userNurse) Register(ctx context.Context, nurse domain.UserNurse) (*domain.UserNurseResponse, domain.ErrorMessage) {
 	err := un.userNurseRepo.Register(ctx, un.db, nurse)
 	if err != nil {
+		if err, ok := err.(*pgconn.PgError); ok {
+			if err.Code == "23505" {
+				return nil, domain.NewErrConflict("nip already exists")
+			}
+		}
+
 		return nil, domain.NewErrInternalServerError(err.Error())
 	}
 
