@@ -29,10 +29,13 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	validate.RegisterValidation("iso8601", validation.ISO8601)
 
 	userITRepository := repository.NewUserIT()
+	userNurseRepository := repository.NewUserNurse()
 
 	userITService := service.NewUserIT(s.db.GetDB(), jwtSecret, bcryptSalt, userITRepository)
+	userNurseService := service.NewUserNurse(s.db.GetDB(), jwtSecret, bcryptSalt, userNurseRepository)
 
 	userITHandler := handler.NewUserIT(validate, userITService)
+	userNurseHandler := handler.NewUserNurse(validate, userNurseService)
 
 	s.App.Use(recover.New())
 
@@ -43,6 +46,9 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	it := user.Group("/it")
 	it.Post("/register", userITHandler.Register())
 	it.Post("/login", userITHandler.Login())
+
+	nurse := user.Group("/nurse")
+	nurse.Post("/login", userNurseHandler.Login())
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
