@@ -17,7 +17,7 @@ type UserNurse struct {
 }
 
 type RegisterUserNurse struct {
-	NIP       *int   `json:"nip" validate:"required,nip=nurse"`
+	NIP       int64  `json:"nip" validate:"required,nip=nurse"`
 	Name      string `json:"name" validate:"required,min=5,max=50"`
 	IDCardImg string `json:"identityCardScanImg" validate:"required,url"`
 }
@@ -27,7 +27,7 @@ type AccessSystemUserNurse struct {
 }
 
 type LoginUserNurse struct {
-	NIP      *int   `json:"nip" validate:"required,nip=nurse"`
+	NIP      int64  `json:"nip" validate:"required,nip=nurse"`
 	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
@@ -46,7 +46,7 @@ func (u RegisterUserNurse) NewUserNurseFromDTO() UserNurse {
 	return UserNurse{
 		ID:        id.String(),
 		CreatedAt: createdAt,
-		NIP:       *u.NIP,
+		NIP:       u.NIP,
 		Name:      u.Name,
 		IDCardImg: u.IDCardImg,
 		Role:      "nurse",
