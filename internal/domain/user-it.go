@@ -22,7 +22,7 @@ type RegisterUserIT struct {
 }
 
 type LoginUserIT struct {
-	NIP      *int   `json:"nip" validate:"required,nip=it"`
+	NIP      *int64 `json:"nip" validate:"required,nip=it"`
 	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
