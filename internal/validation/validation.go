@@ -24,11 +24,11 @@ func NIP(fl validator.FieldLevel) bool {
 	nip = nip / 100
 
 	// check year
-	year := nip % 1000
+	year := nip % 10000
 	if year < 2000 || year > int64(time.Now().Year()) {
 		return false
 	}
-	nip = nip / 1000
+	nip = nip / 10000
 
 	// check gender
 	gender := nip % 10
@@ -40,13 +40,15 @@ func NIP(fl validator.FieldLevel) bool {
 	// check role
 	itRole := role == "it" && nip == 615
 	nurseRole := role == "nurse" && nip == 303
-	if !itRole {
-		return false
-	} else if !nurseRole {
-		return false
+	if itRole {
+		return true
 	}
 
-	return true
+	if nurseRole {
+		return true
+	}
+
+	return false
 }
 
 func URL(fl validator.FieldLevel) bool {

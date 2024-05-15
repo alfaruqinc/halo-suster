@@ -9,26 +9,33 @@ import (
 type UserIT struct {
 	ID        string    `db:"id"`
 	CreatedAt time.Time `db:"created_at"`
-	NIP       int       `db:"nip"`
+	NIP       int64     `db:"nip"`
 	Name      string    `db:"name"`
 	Password  string    `db:"password"`
 	Role      string    `db:"role"`
 }
 
 type RegisterUserIT struct {
-	NIP      *int   `json:"nip" validate:"required,nip=it"`
+	NIP      int64  `json:"nip" validate:"required,nip=it"`
 	Name     string `json:"name" validate:"required,min=5,max=50"`
 	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
 type LoginUserIT struct {
-	NIP      *int   `json:"nip" validate:"required,nip=it"`
+	NIP      int64  `json:"nip" validate:"required,nip=it"`
 	Password string `json:"password" validate:"required,min=5,max=33"`
+}
+
+type UserITResponse struct {
+	ID          string `json:"userId"`
+	NIP         int64  `json:"nip"`
+	Name        string `json:"name"`
+	AccessToken string `json:"accessToken"`
 }
 
 type GetUserIT struct {
 	ID        string    `json:"userId"`
-	NIP       int       `json:"nip"`
+	NIP       int64     `json:"nip"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"createdAt"`
 }
@@ -41,7 +48,7 @@ func (u RegisterUserIT) NewUserITFromDTO() UserIT {
 	return UserIT{
 		ID:        id.String(),
 		CreatedAt: createdAt,
-		NIP:       *u.NIP,
+		NIP:       u.NIP,
 		Name:      u.Name,
 		Password:  u.Password,
 		Role:      "it",
