@@ -80,12 +80,12 @@ func (uit *userIT) Login(ctx context.Context, user domain.LoginUserIT) (*domain.
 	}
 	isITRole := (userIT.NIP / 1e10) == 615
 	if !isITRole {
-		return nil, domain.NewErrNotFound("non IT user")
+		return nil, domain.NewErrNotFound("user is not found")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(userIT.Password), []byte(user.Password))
 	if err != nil {
-		return nil, domain.NewErrUnauthorized(err.Error())
+		return nil, domain.NewErrNotFound("password is wrong")
 	}
 
 	claims := jwt.MapClaims{
