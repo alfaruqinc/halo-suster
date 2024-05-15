@@ -11,9 +11,6 @@ func msgForTag(fe validator.FieldError) string {
 	field := fe.Field()
 	param := fe.Param()
 
-	fmt.Println(field)
-	fmt.Println(param)
-
 	switch fe.Tag() {
 	case "required":
 		return fmt.Sprintf("%s is required", field)
