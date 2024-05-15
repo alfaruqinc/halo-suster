@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS users (
     role VARCHAR(5) NOT NULL,
     id_card_img VARCHAR NULL,
 
+    CONSTRAINT nip_users_unique UNIQUE(nip),
     CONSTRAINT role_users_check CHECK(role IN ('it', 'nurse'))
 );
