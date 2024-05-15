@@ -31,6 +31,11 @@ func (un *userNurse) Register() fiber.Handler {
 		body := new(domain.RegisterUserNurse)
 		ctx.BodyParser(&body)
 
+		if err := un.validator.Struct(body); err != nil {
+			err := helper.ValidateRequest(err)
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
 		nurse := body.NewUserNurseFromDTO()
 		resp, err := un.userNurseService.Register(ctx.Context(), nurse)
 		if err != nil {
