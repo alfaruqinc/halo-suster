@@ -14,6 +14,7 @@ import (
 
 type UserIT interface {
 	Register(ctx context.Context, user domain.UserIT) (*domain.UserITResponse, domain.ErrorMessage)
+	Login(ctx context.Context, user domain.LoginUserIT) (*domain.UserITResponse, domain.ErrorMessage)
 }
 
 type userIT struct {
@@ -70,4 +71,43 @@ func (uit *userIT) Register(ctx context.Context, user domain.UserIT) (*domain.Us
 	}
 
 	return &registerResp, nil
+}
+
+func (uit *userIT) Login(ctx context.Context, user domain.LoginUserIT) (*domain.UserITResponse, domain.ErrorMessage) {
+	userIT, err := uit.userRepository.GetUserITByNIP(ctx, uit.db, *user.NIP)
+	if err != nil {
+		return nil, domain.NewErrNotFound("user is not found")
+	}
+	isITRole := (userIT.NIP / 1e10) == 615
+	if !isITRole {
+		return nil, domain.NewErrNotFound("non IT user")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(userIT.Password), []byte(user.Password))
+	if err != nil {
+		return nil, domain.NewErrUnauthorized(err.Error())
+	}
+
+	claims := jwt.MapClaims{
+		"id":   userIT.ID,
+		"nip":  userIT.NIP,
+		"role": userIT.Role,
+		"exp":  time.Now().Add(time.Hour * 8).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	t, err := token.SignedString([]byte(uit.jwtSecret))
+	if err != nil {
+		return nil, domain.NewErrInternalServerError(err.Error())
+	}
+
+	loginResp := domain.UserITResponse{
+		ID:          userIT.ID,
+		NIP:         userIT.NIP,
+		Name:        userIT.Name,
+		AccessToken: t,
+	}
+
+	return &loginResp, nil
 }
