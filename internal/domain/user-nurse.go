@@ -31,6 +31,13 @@ type LoginUserNurse struct {
 	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
+type UserNurseResponse struct {
+	ID          string `json:"userId"`
+	NIP         int64  `json:"nip"`
+	Name        string `json:"name"`
+	AccessToken string `json:"accessToken"`
+}
+
 type GetUserNurse struct {
 	ID        string    `json:"userId"`
 	NIP       int       `json:"nip"`
