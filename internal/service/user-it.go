@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -46,6 +47,11 @@ func (uit *userIT) Register(ctx context.Context, user domain.UserIT) (*domain.Us
 
 	err = uit.userRepository.Register(ctx, uit.db, user)
 	if err != nil {
+		if err, ok := err.(*pgconn.PgError); ok {
+			if err.Code == "23505" {
+				return nil, domain.NewErrConflict("nip already exists")
+			}
+		}
 		return nil, domain.NewErrInternalServerError(err.Error())
 	}
 
