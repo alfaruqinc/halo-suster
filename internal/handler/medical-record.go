@@ -12,6 +12,7 @@ import (
 
 type MedicalRecord interface {
 	Create() fiber.Handler
+	GetAllMedicalRecords() fiber.Handler
 }
 
 type medicalRecord struct {
@@ -49,5 +50,18 @@ func (mr *medicalRecord) Create() fiber.Handler {
 		respCreated := domain.NewStatusCreated("success create medical record", "")
 
 		return ctx.Status(respCreated.Status()).JSON(respCreated)
+	}
+}
+
+func (mr *medicalRecord) GetAllMedicalRecords() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		records, err := mr.medicalRecordService.GetAllMedicalRecords(ctx.Context())
+		if err != nil {
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		resp := domain.NewStatusOK("success retrive all medical records", records)
+
+		return ctx.Status(resp.Status()).JSON(resp)
 	}
 }
