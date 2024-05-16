@@ -8,3 +8,13 @@ type UserResponse struct {
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"createdAt"`
 }
+
+type UserQueryParams struct {
+	ID        string `query:"userId"`
+	Limit     string `query:"limit"`
+	Offset    string `query:"offset"`
+	Name      string `query:"name"`
+	NIP       string `query:"nip"`
+	Role      string `query:"role"`
+	CreatedAt string `query:"createdAt"`
+}
