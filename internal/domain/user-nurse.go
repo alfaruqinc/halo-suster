@@ -24,6 +24,7 @@ type RegisterUserNurse struct {
 }
 
 type AccessSystemUserNurse struct {
+	ID       string `json:"id"`
 	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
