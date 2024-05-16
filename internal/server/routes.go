@@ -41,7 +41,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	userITHandler := handler.NewUserIT(validate, userITService)
 	userNurseHandler := handler.NewUserNurse(validate, userNurseService)
 	userHandler := handler.NewUser(userService)
-	medicalPatientHandler := handler.NewMedicalPatient(medicalPatientService)
+	medicalPatientHandler := handler.NewMedicalPatient(validate, medicalPatientService)
 
 	s.App.Use(recover.New())
 
