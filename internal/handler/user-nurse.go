@@ -77,6 +77,11 @@ func (un *userNurse) Update() fiber.Handler {
 		body := new(domain.UpdateUserNurse)
 		ctx.BodyParser(body)
 
+		if err := un.validator.Struct(body); err != nil {
+			err := helper.ValidateRequest(err)
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
 		body.ID = nurseId
 		err := un.userNurseService.Update(ctx.Context(), *body)
 		if err != nil {
