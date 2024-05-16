@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"health-record/internal/domain"
 	"net/url"
 	"strconv"
 	"strings"
@@ -38,8 +39,8 @@ func NIP(fl validator.FieldLevel) bool {
 	nip = nip / 10
 
 	// check role
-	itRole := role == "it" && nip == 615
-	nurseRole := role == "nurse" && nip == 303
+	itRole := role == "it" && int(nip) == domain.ITRole
+	nurseRole := role == "nurse" && int(nip) == domain.NurseRole
 	if itRole {
 		return true
 	}
