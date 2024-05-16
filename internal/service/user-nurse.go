@@ -17,6 +17,7 @@ type UserNurse interface {
 	Register(ctx context.Context, nurse domain.UserNurse) (*domain.UserNurseResponse, domain.ErrorMessage)
 	Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage)
 	Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage
+	Delete(ctx context.Context, nurseId string) domain.ErrorMessage
 }
 
 type userNurse struct {
@@ -119,6 +120,15 @@ func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) d
 	}
 	if affRow == 0 {
 		return domain.NewErrNotFound("nurse is not found")
+	}
+
+	return nil
+}
+
+func (un *userNurse) Delete(ctx context.Context, nurseId string) domain.ErrorMessage {
+	err := un.userNurseRepo.Delete(ctx, un.db, nurseId)
+	if err != nil {
+		return domain.NewErrInternalServerError(err.Error())
 	}
 
 	return nil
