@@ -12,6 +12,7 @@ import (
 type UserNurse interface {
 	Register() fiber.Handler
 	Login() fiber.Handler
+	Update() fiber.Handler
 }
 
 type userNurse struct {
@@ -66,5 +67,24 @@ func (un *userNurse) Login() fiber.Handler {
 		userLogin := domain.NewStatusOK("success login", resp)
 
 		return ctx.Status(userLogin.Status()).JSON(userLogin)
+	}
+}
+
+func (un *userNurse) Update() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		nurseId := ctx.Params("nurseId")
+
+		body := new(domain.UpdateUserNurse)
+		ctx.BodyParser(body)
+
+		body.ID = nurseId
+		err := un.userNurseService.Update(ctx.Context(), *body)
+		if err != nil {
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		resp := domain.NewStatusOK("success update user nurse", "")
+
+		return ctx.Status(resp.Status()).JSON(resp)
 	}
 }
