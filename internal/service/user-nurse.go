@@ -16,6 +16,7 @@ import (
 type UserNurse interface {
 	Register(ctx context.Context, nurse domain.UserNurse) (*domain.UserNurseResponse, domain.ErrorMessage)
 	Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage)
+	Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage
 }
 
 type userNurse struct {
@@ -100,4 +101,13 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 	}
 
 	return &loginResp, nil
+}
+
+func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
+	err := un.userNurseRepo.Update(ctx, un.db, nurse)
+	if err != nil {
+		return domain.NewErrInternalServerError(err.Error())
+	}
+
+	return nil
 }
