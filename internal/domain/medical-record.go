@@ -45,6 +45,24 @@ type GetMedicalRecord struct {
 	CreatedBy      UserRecord           `json:"createdBy"`
 }
 
+// Query Params
+type MedicalPatientRecordQueryParams struct {
+	IdentityNumber string `query:"identityNumber"`
+}
+
+type UserRecordQueryParams struct {
+	ID  string `query:"userId"`
+	NIP string `query:"nip"`
+}
+
+type MedicalRecordQueryParams struct {
+	CreatedAt      string                          `query:"createdAt"`
+	Limit          string                          `query:"limit"`
+	Offset         string                          `query:"offset"`
+	IdentityDetail MedicalPatientRecordQueryParams `query:"identityDetail"`
+	CreatedBy      UserRecordQueryParams           `query:"createdBy"`
+}
+
 func (cmr *CreateMedicalRecord) NewMedicalRecordFromDTO() MedicalRecord {
 	id := ulid.Make()
 	rawCreatedAt := time.Now().Format(time.RFC3339)
