@@ -10,6 +10,7 @@ import (
 type UserNurse interface {
 	Register(ctx context.Context, db *sqlx.DB, nurse domain.UserNurse) error
 	GetUserNurseByNIP(ctx context.Context, db *sqlx.DB, nip int64) (*domain.UserNurse, error)
+	Update(ctx context.Context, db *sqlx.DB, nurse domain.UpdateUserNurse) error
 }
 
 type userNurse struct{}
@@ -40,4 +41,17 @@ func (un *userNurse) GetUserNurseByNIP(ctx context.Context, db *sqlx.DB, nip int
 	}
 
 	return &userNurse, nil
+}
+
+func (un *userNurse) Update(ctx context.Context, db *sqlx.DB, nurse domain.UpdateUserNurse) error {
+	query := `UPDATE users
+	SET nip = $2,
+	name = $3
+	WHERE id = $1`
+	_, err := db.ExecContext(ctx, query, nurse.ID, nurse.NIP, nurse.Name)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
