@@ -103,6 +103,11 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 }
 
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
+	isNurseRole := (nurse.NIP / 1e10) == 303
+	if !isNurseRole {
+		return domain.NewErrNotFound("user is not nurse")
+	}
+
 	affRow, err := un.userNurseRepo.Update(ctx, un.db, nurse)
 	if err != nil {
 		if err, ok := err.(*pgconn.PgError); ok {

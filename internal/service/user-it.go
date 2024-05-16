@@ -82,7 +82,7 @@ func (uit *userIT) Register(ctx context.Context, user domain.UserIT) (*domain.Us
 func (uit *userIT) Login(ctx context.Context, user domain.LoginUserIT) (*domain.UserITResponse, domain.ErrorMessage) {
 	isITRole := (user.NIP / 1e10) == 615
 	if !isITRole {
-		return nil, domain.NewErrNotFound("user is not found")
+		return nil, domain.NewErrNotFound("user is not it")
 	}
 	userIT, err := uit.userRepository.GetUserITByNIP(ctx, uit.db, user.NIP)
 	if err != nil {
