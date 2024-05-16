@@ -10,6 +10,7 @@ import (
 
 type MedicalRecord interface {
 	Create(ctx context.Context, record domain.MedicalRecord) domain.ErrorMessage
+	GetAllMedicalRecords(ctx context.Context) ([]domain.GetMedicalRecord, domain.ErrorMessage)
 }
 
 type medicalRecord struct {
@@ -34,4 +35,13 @@ func (mr *medicalRecord) Create(ctx context.Context, record domain.MedicalRecord
 	}
 
 	return nil
+}
+
+func (mr *medicalRecord) GetAllMedicalRecords(ctx context.Context) ([]domain.GetMedicalRecord, domain.ErrorMessage) {
+	records, err := mr.medicalRecordRepo.GetAllMedicalRecords(ctx, mr.db)
+	if err != nil {
+		return nil, domain.NewErrInternalServerError(err.Error())
+	}
+
+	return records, nil
 }
