@@ -2,6 +2,7 @@ package server
 
 import (
 	"health-record/internal/handler"
+	"health-record/internal/middleware"
 	"health-record/internal/repository"
 	"health-record/internal/service"
 	"health-record/internal/validation"
@@ -46,9 +47,12 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	medicalPatientHandler := handler.NewMedicalPatient(validate, medicalPatientService)
 	medicalRecordHandler := handler.NewMedicalRecord(validate, medicalRecordService)
 
+	authMiddleware := middleware.NewAuth(jwtSecret)
+
 	s.App.Use(recover.New())
 
 	apiV1 := s.App.Group("/v1")
+	apiV1.Use(authMiddleware.Auth())
 
 	user := apiV1.Group("/user")
 
@@ -56,9 +60,9 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	it.Post("/register", userITHandler.Register())
 	it.Post("/login", userITHandler.Login())
 
-	// TODO: add auth middleware
 	nurse := user.Group("/nurse")
 	nurse.Post("/login", userNurseHandler.Login())
+
 	nurse.Post("/register", userNurseHandler.Register())
 	nurse.Put("/:nurseId", userNurseHandler.Update())
 	nurse.Delete("/:nurseId", userNurseHandler.Delete())
