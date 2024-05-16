@@ -65,6 +65,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 
 	medical := apiV1.Group("/medical")
 	medical.Post("/patient", medicalPatientHandler.Create())
+	medical.Get("/patient", medicalPatientHandler.GetAllMedicalPatients())
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
