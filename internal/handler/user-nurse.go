@@ -13,6 +13,7 @@ type UserNurse interface {
 	Register() fiber.Handler
 	Login() fiber.Handler
 	Update() fiber.Handler
+	Delete() fiber.Handler
 }
 
 type userNurse struct {
@@ -91,5 +92,20 @@ func (un *userNurse) Update() fiber.Handler {
 		resp := domain.NewStatusOK("success update user nurse", "")
 
 		return ctx.Status(resp.Status()).JSON(resp)
+	}
+}
+
+func (un *userNurse) Delete() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		nurseId := ctx.Params("nurseId")
+
+		err := un.userNurseService.Delete(ctx.Context(), nurseId)
+		if err != nil {
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		respDelete := domain.NewStatusOK("success delete nurse", "")
+
+		return ctx.Status(respDelete.Status()).JSON(respDelete)
 	}
 }
