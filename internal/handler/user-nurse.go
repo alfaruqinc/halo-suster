@@ -14,6 +14,7 @@ type UserNurse interface {
 	Login() fiber.Handler
 	Update() fiber.Handler
 	Delete() fiber.Handler
+	GiveAccess() fiber.Handler
 }
 
 type userNurse struct {
@@ -107,5 +108,24 @@ func (un *userNurse) Delete() fiber.Handler {
 		respDelete := domain.NewStatusOK("success delete nurse", "")
 
 		return ctx.Status(respDelete.Status()).JSON(respDelete)
+	}
+}
+
+func (un *userNurse) GiveAccess() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		nurseId := ctx.Params("nurseId")
+
+		body := new(domain.AccessSystemUserNurse)
+		ctx.BodyParser(body)
+
+		body.ID = nurseId
+		err := un.userNurseService.GiveAccess(ctx.Context(), *body)
+		if err != nil {
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		resp := domain.NewStatusOK("success give nurse access", "")
+
+		return ctx.Status(resp.Status()).JSON(resp)
 	}
 }
