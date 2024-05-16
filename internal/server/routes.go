@@ -55,6 +55,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	nurse.Post("/login", userNurseHandler.Login())
 	nurse.Post("/register", userNurseHandler.Register())
 	nurse.Put("/:nurseId", userNurseHandler.Update())
+	nurse.Delete("/:nurseId", userNurseHandler.Delete())
 
 	user.Get("", userHandler.GetAllUsers())
 }
