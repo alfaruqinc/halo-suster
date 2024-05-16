@@ -11,6 +11,7 @@ type UserNurse interface {
 	Register(ctx context.Context, db *sqlx.DB, nurse domain.UserNurse) error
 	GetUserNurseByNIP(ctx context.Context, db *sqlx.DB, nip int64) (*domain.UserNurse, error)
 	Update(ctx context.Context, db *sqlx.DB, nurse domain.UpdateUserNurse) (int64, error)
+	Delete(ctx context.Context, db *sqlx.DB, nurseId string) error
 }
 
 type userNurse struct{}
@@ -58,4 +59,15 @@ func (un *userNurse) Update(ctx context.Context, db *sqlx.DB, nurse domain.Updat
 	}
 
 	return aff, nil
+}
+
+func (un *userNurse) Delete(ctx context.Context, db *sqlx.DB, nurseId string) error {
+	query := `DELETE FROM users
+	WHERE id = $1`
+	_, err := db.ExecContext(ctx, query, nurseId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
