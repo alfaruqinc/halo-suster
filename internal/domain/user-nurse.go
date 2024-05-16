@@ -39,6 +39,12 @@ type UserNurseResponse struct {
 	AccessToken string `json:"accessToken,omitempty"`
 }
 
+type UpdateUserNurse struct {
+	ID   string `json:"id"`
+	NIP  int64  `json:"nip" validate:"required,nip=nurse"`
+	Name string `json:"name" validate:"required,min=5,max=50"`
+}
+
 type GetUserNurse struct {
 	ID        string    `json:"userId"`
 	NIP       int       `json:"nip"`
