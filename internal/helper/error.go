@@ -18,8 +18,10 @@ func msgForTag(fe validator.FieldError) string {
 		return fmt.Sprintf("minimum %s is %s", field, param)
 	case "max":
 		return fmt.Sprintf("maximum %s is %s", field, param)
-	case "url", "phonenumber", "nip":
+	case "phonenumber", "nip":
 		return fmt.Sprintf("wrong %s format", field)
+	case "url":
+		return fmt.Sprintf("%s should be url", field)
 	case "oneof":
 		return fmt.Sprintf("%s should be one of this value %s", field, param)
 	}

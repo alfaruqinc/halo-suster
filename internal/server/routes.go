@@ -30,12 +30,15 @@ func (s *FiberServer) RegisterFiberRoutes() {
 
 	userITRepository := repository.NewUserIT()
 	userNurseRepository := repository.NewUserNurse()
+	userRepository := repository.NewUser()
 
 	userITService := service.NewUserIT(s.db.GetDB(), jwtSecret, bcryptSalt, userITRepository)
 	userNurseService := service.NewUserNurse(s.db.GetDB(), jwtSecret, bcryptSalt, userNurseRepository)
+	userService := service.NewUser(s.db.GetDB(), userRepository)
 
 	userITHandler := handler.NewUserIT(validate, userITService)
 	userNurseHandler := handler.NewUserNurse(validate, userNurseService)
+	userHandler := handler.NewUser(userService)
 
 	s.App.Use(recover.New())
 
@@ -47,8 +50,15 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	it.Post("/register", userITHandler.Register())
 	it.Post("/login", userITHandler.Login())
 
+	// TODO: add auth middleware
 	nurse := user.Group("/nurse")
 	nurse.Post("/login", userNurseHandler.Login())
+	nurse.Post("/register", userNurseHandler.Register())
+	nurse.Put("/:nurseId", userNurseHandler.Update())
+	nurse.Delete("/:nurseId", userNurseHandler.Delete())
+	nurse.Put("/:nurseId/access", userNurseHandler.GiveAccess())
+
+	user.Get("", userHandler.GetAllUsers())
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {

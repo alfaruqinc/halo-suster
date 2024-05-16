@@ -24,6 +24,7 @@ type RegisterUserNurse struct {
 }
 
 type AccessSystemUserNurse struct {
+	ID       string `json:"id"`
 	Password string `json:"password" validate:"required,min=5,max=33"`
 }
 
@@ -36,7 +37,13 @@ type UserNurseResponse struct {
 	ID          string `json:"userId"`
 	NIP         int64  `json:"nip"`
 	Name        string `json:"name"`
-	AccessToken string `json:"accessToken"`
+	AccessToken string `json:"accessToken,omitempty"`
+}
+
+type UpdateUserNurse struct {
+	ID   string `json:"id"`
+	NIP  int64  `json:"nip" validate:"required,nip=nurse"`
+	Name string `json:"name" validate:"required,min=5,max=50"`
 }
 
 type GetUserNurse struct {
