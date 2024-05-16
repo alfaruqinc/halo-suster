@@ -31,14 +31,17 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	userITRepository := repository.NewUserIT()
 	userNurseRepository := repository.NewUserNurse()
 	userRepository := repository.NewUser()
+	medicalPatientRepository := repository.NewMedicalPatient()
 
 	userITService := service.NewUserIT(s.db.GetDB(), jwtSecret, bcryptSalt, userITRepository)
 	userNurseService := service.NewUserNurse(s.db.GetDB(), jwtSecret, bcryptSalt, userNurseRepository)
 	userService := service.NewUser(s.db.GetDB(), userRepository)
+	medicalPatientService := service.NewMedicalPatient(s.db.GetDB(), medicalPatientRepository)
 
 	userITHandler := handler.NewUserIT(validate, userITService)
 	userNurseHandler := handler.NewUserNurse(validate, userNurseService)
 	userHandler := handler.NewUser(userService)
+	medicalPatientHandler := handler.NewMedicalPatient(medicalPatientService)
 
 	s.App.Use(recover.New())
 
@@ -59,6 +62,9 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	nurse.Put("/:nurseId/access", userNurseHandler.GiveAccess())
 
 	user.Get("", userHandler.GetAllUsers())
+
+	medical := apiV1.Group("/medical")
+	medical.Post("/patient", medicalPatientHandler.Create())
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
