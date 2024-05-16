@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS medical_records (
     id VARCHAR(26) PRIMARY KEY,
     created_at TIMESTAMPTZ DEFAULT now(),
-    identity_number INT NOT NULL,
+    identity_number BIGINT NOT NULL,
     symptoms VARCHAR(2000) NOT NULL,
     medications VARCHAR(2000) NOT NULL,
     medical_patient_id VARCHAR(26) NOT NULL,
