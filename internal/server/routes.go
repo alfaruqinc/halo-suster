@@ -70,6 +70,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	medical.Post("/patient", medicalPatientHandler.Create())
 	medical.Get("/patient", medicalPatientHandler.GetAllMedicalPatients())
 	medical.Post("/record", medicalRecordHandler.Create())
+	medical.Get("/record", medicalRecordHandler.GetAllMedicalRecords())
 }
 
 func (s *FiberServer) HelloWorldHandler(c *fiber.Ctx) error {
