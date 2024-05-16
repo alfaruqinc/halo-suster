@@ -104,9 +104,12 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 }
 
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
-	err := un.userNurseRepo.Update(ctx, un.db, nurse)
+	affRow, err := un.userNurseRepo.Update(ctx, un.db, nurse)
 	if err != nil {
 		return domain.NewErrInternalServerError(err.Error())
+	}
+	if affRow == 0 {
+		return domain.NewErrNotFound("nurse is not found")
 	}
 
 	return nil
