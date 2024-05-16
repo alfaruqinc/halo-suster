@@ -11,6 +11,7 @@ import (
 
 type MedicalPatient interface {
 	Create() fiber.Handler
+	GetAllMedicalPatients() fiber.Handler
 }
 
 type medicalPatient struct {
@@ -44,5 +45,18 @@ func (mp *medicalPatient) Create() fiber.Handler {
 		respCreated := domain.NewStatusCreated("success create medical patient", "")
 
 		return ctx.Status(respCreated.Status()).JSON(respCreated)
+	}
+}
+
+func (mp *medicalPatient) GetAllMedicalPatients() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		patients, err := mp.medicalPatientService.GetAllMedicalPatients(ctx.Context())
+		if err != nil {
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		respPatients := domain.NewStatusOK("success retrive all medical patients", patients)
+
+		return ctx.Status(respPatients.Status()).JSON(respPatients)
 	}
 }
