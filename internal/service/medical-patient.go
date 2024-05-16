@@ -5,6 +5,7 @@ import (
 	"health-record/internal/domain"
 	"health-record/internal/repository"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -27,6 +28,11 @@ func NewMedicalPatient(db *sqlx.DB, medicalPatientRepo repository.MedicalPatient
 func (mp *medicalPatient) Create(ctx context.Context, patient domain.MedicalPatient) domain.ErrorMessage {
 	err := mp.medicalPatientRepo.Create(ctx, mp.db, patient)
 	if err != nil {
+		if err, ok := err.(*pgconn.PgError); ok {
+			if err.Code == "23505" {
+				return domain.NewErrConflict("identity number already exists")
+			}
+		}
 		return domain.NewErrInternalServerError(err.Error())
 	}
 
