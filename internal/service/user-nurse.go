@@ -126,9 +126,12 @@ func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) d
 }
 
 func (un *userNurse) Delete(ctx context.Context, nurseId string) domain.ErrorMessage {
-	err := un.userNurseRepo.Delete(ctx, un.db, nurseId)
+	affRow, err := un.userNurseRepo.Delete(ctx, un.db, nurseId)
 	if err != nil {
 		return domain.NewErrInternalServerError(err.Error())
+	}
+	if affRow == 0 {
+		return domain.NewErrBadRequest("user is not nurse")
 	}
 
 	return nil
