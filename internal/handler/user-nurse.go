@@ -118,6 +118,11 @@ func (un *userNurse) GiveAccess() fiber.Handler {
 		body := new(domain.AccessSystemUserNurse)
 		ctx.BodyParser(body)
 
+		if err := un.validator.Struct(body); err != nil {
+			err := helper.ValidateRequest(err)
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
 		body.ID = nurseId
 		err := un.userNurseService.GiveAccess(ctx.Context(), *body)
 		if err != nil {
