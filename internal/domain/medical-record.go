@@ -22,12 +22,27 @@ type CreateMedicalRecord struct {
 	Medications    string `json:"medications" validate:"required,min=1,max=2000"`
 }
 
+type MedicalPatientRecord struct {
+	IdentityNumber int    `json:"identityNumber"`
+	PhoneNumber    string `json:"phoneNumber"`
+	Name           string `json:"name"`
+	BirthDate      string `json:"birthDate"`
+	Gender         string `json:"gender"`
+	IDCardImg      string `json:"identityCardScanImg"`
+}
+
+type UserRecord struct {
+	ID   string `json:"userId"`
+	NIP  string `json:"nip"`
+	Name string `json:"name"`
+}
+
 type GetMedicalRecord struct {
-	CreatedAt      time.Time      `json:"createdAt"`
-	Symptoms       string         `json:"symptoms"`
-	Medications    string         `json:"medications"`
-	IdentityDetail MedicalPatient `json:"identityDetail"`
-	CreatedBy      UserNurse      `json:"createdBy"`
+	CreatedAt      time.Time            `json:"createdAt"`
+	Symptoms       string               `json:"symptoms"`
+	Medications    string               `json:"medications"`
+	IdentityDetail MedicalPatientRecord `json:"identityDetail"`
+	CreatedBy      UserRecord           `json:"createdBy"`
 }
 
 func (cmr *CreateMedicalRecord) NewMedicalRecordFromDTO() MedicalRecord {
