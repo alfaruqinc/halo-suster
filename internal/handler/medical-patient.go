@@ -50,7 +50,10 @@ func (mp *medicalPatient) Create() fiber.Handler {
 
 func (mp *medicalPatient) GetAllMedicalPatients() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		patients, err := mp.medicalPatientService.GetAllMedicalPatients(ctx.Context())
+		queryParams := new(domain.MedicalPatientQueryParams)
+		ctx.QueryParser(queryParams)
+
+		patients, err := mp.medicalPatientService.GetAllMedicalPatients(ctx.Context(), *queryParams)
 		if err != nil {
 			return ctx.Status(err.Status()).JSON(err)
 		}

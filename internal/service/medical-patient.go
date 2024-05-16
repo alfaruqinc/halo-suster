@@ -11,7 +11,7 @@ import (
 
 type MedicalPatient interface {
 	Create(ctx context.Context, patient domain.MedicalPatient) domain.ErrorMessage
-	GetAllMedicalPatients(ctx context.Context) ([]domain.GetMedicalPatient, domain.ErrorMessage)
+	GetAllMedicalPatients(ctx context.Context, queryParams domain.MedicalPatientQueryParams) ([]domain.GetMedicalPatient, domain.ErrorMessage)
 }
 
 type medicalPatient struct {
@@ -40,8 +40,8 @@ func (mp *medicalPatient) Create(ctx context.Context, patient domain.MedicalPati
 	return nil
 }
 
-func (mp *medicalPatient) GetAllMedicalPatients(ctx context.Context) ([]domain.GetMedicalPatient, domain.ErrorMessage) {
-	patients, err := mp.medicalPatientRepo.GetAllMedicalPatients(ctx, mp.db)
+func (mp *medicalPatient) GetAllMedicalPatients(ctx context.Context, queryParams domain.MedicalPatientQueryParams) ([]domain.GetMedicalPatient, domain.ErrorMessage) {
+	patients, err := mp.medicalPatientRepo.GetAllMedicalPatients(ctx, mp.db, queryParams)
 	if err != nil {
 		return nil, domain.NewErrInternalServerError(err.Error())
 	}
