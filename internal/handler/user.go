@@ -23,7 +23,10 @@ func NewUser(userService service.User) User {
 
 func (u *user) GetAllUsers() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		users, err := u.userService.GetAllUsers(ctx.Context())
+		queryParams := new(domain.UserQueryParams)
+		ctx.QueryParser(queryParams)
+
+		users, err := u.userService.GetAllUsers(ctx.Context(), *queryParams)
 		if err != nil {
 			return ctx.Status(err.Status()).JSON(err)
 		}

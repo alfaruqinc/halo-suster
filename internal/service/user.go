@@ -9,7 +9,7 @@ import (
 )
 
 type User interface {
-	GetAllUsers(ctx context.Context) ([]domain.UserResponse, domain.ErrorMessage)
+	GetAllUsers(ctx context.Context, queryParams domain.UserQueryParams) ([]domain.UserResponse, domain.ErrorMessage)
 }
 
 type user struct {
@@ -24,8 +24,8 @@ func NewUser(db *sqlx.DB, userRepo repository.User) User {
 	}
 }
 
-func (u *user) GetAllUsers(ctx context.Context) ([]domain.UserResponse, domain.ErrorMessage) {
-	users, err := u.userRepo.GetAllUser(ctx, u.db)
+func (u *user) GetAllUsers(ctx context.Context, queryParams domain.UserQueryParams) ([]domain.UserResponse, domain.ErrorMessage) {
+	users, err := u.userRepo.GetAllUser(ctx, u.db, queryParams)
 	if err != nil {
 		return nil, domain.NewErrInternalServerError(err.Error())
 	}
