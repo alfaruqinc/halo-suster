@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS medical_patients (
     identity_number INT NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     name VARCHAR(30) NOT NULL,
-    birth_date TIMESTAMPTZ NOT NULL,
+    birth_date VARCHAR NOT NULL,
     gender VARCHAR(6) NOT NULL,
     id_card_img VARCHAR NOT NULL,
 
