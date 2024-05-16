@@ -43,7 +43,6 @@ func (un *userNurse) Register(ctx context.Context, nurse domain.UserNurse) (*dom
 				return nil, domain.NewErrConflict("nip already exists")
 			}
 		}
-
 		return nil, domain.NewErrInternalServerError(err.Error())
 	}
 
@@ -106,6 +105,11 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
 	affRow, err := un.userNurseRepo.Update(ctx, un.db, nurse)
 	if err != nil {
+		if err, ok := err.(*pgconn.PgError); ok {
+			if err.Code == "23505" {
+				return domain.NewErrConflict("nip already exists")
+			}
+		}
 		return domain.NewErrInternalServerError(err.Error())
 	}
 	if affRow == 0 {
