@@ -35,6 +35,15 @@ type GetMedicalPatient struct {
 	Gender         string    `json:"gender"`
 }
 
+type MedicalPatientQueryParams struct {
+	IdentityNumber string `query:"identityNumber"`
+	Limit          string `query:"limit"`
+	Offset         string `query:"offset"`
+	Name           string `query:"name"`
+	PhoneNumber    string `query:"phoneNumber"`
+	CreatedAt      string `query:"createdAt"`
+}
+
 func (cmp *CreateMedicalPatient) NewMedicalPatienFromDTO() MedicalPatient {
 	id := ulid.Make()
 	rawCreatedAt := time.Now().Format(time.RFC3339)

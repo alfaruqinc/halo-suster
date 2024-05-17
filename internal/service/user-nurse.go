@@ -59,7 +59,7 @@ func (un *userNurse) Register(ctx context.Context, nurse domain.UserNurse) (*dom
 }
 
 func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage) {
-	isNurseRole := (user.NIP / 1e10) == 303
+	isNurseRole := int(user.NIP/1e10) == domain.NurseRole
 	if !isNurseRole {
 		return nil, domain.NewErrNotFound("user is not found")
 	}
@@ -106,7 +106,7 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 }
 
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
-	isNurseRole := (nurse.NIP / 1e10) == 303
+	isNurseRole := int(nurse.NIP/1e10) == domain.NurseRole
 	if !isNurseRole {
 		return domain.NewErrNotFound("user is not nurse")
 	}

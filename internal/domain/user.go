@@ -2,6 +2,11 @@ package domain
 
 import "time"
 
+var (
+	ITRole    = 615
+	NurseRole = 303
+)
+
 type UserResponse struct {
 	ID        string    `json:"userId"`
 	NIP       int64     `json:"nip"`

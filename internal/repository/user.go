@@ -60,9 +60,9 @@ func (u *user) GetAllUser(ctx context.Context, db *sqlx.DB, queryParams domain.U
 
 	// ORDER
 	var orderClause []string
-	createdAt := "desc"
+	createdAt := "DESC"
 	if queryParams.CreatedAt == "asc" {
-		createdAt = "asc"
+		createdAt = "ASC"
 	}
 	orderClause = append(orderClause, fmt.Sprintf("created_at %s", createdAt))
 

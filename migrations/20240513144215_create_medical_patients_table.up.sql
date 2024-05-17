@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS medical_patients (
     id VARCHAR(26) PRIMARY KEY,
     created_at TIMESTAMPTZ DEFAULT now(),
-    identity_number INT NOT NULL,
+    identity_number BIGINT NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     name VARCHAR(30) NOT NULL,
-    birth_date TIMESTAMPTZ NOT NULL,
+    birth_date VARCHAR NOT NULL,
     gender VARCHAR(6) NOT NULL,
     id_card_img VARCHAR NOT NULL,
 
