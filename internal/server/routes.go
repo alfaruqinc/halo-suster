@@ -46,6 +46,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 	userHandler := handler.NewUser(userService)
 	medicalPatientHandler := handler.NewMedicalPatient(validate, medicalPatientService)
 	medicalRecordHandler := handler.NewMedicalRecord(validate, medicalRecordService)
+	awsS3Handler := handler.NewAWSS3()
 
 	authMiddleware := middleware.NewAuth(jwtSecret)
 
@@ -53,6 +54,8 @@ func (s *FiberServer) RegisterFiberRoutes() {
 
 	apiV1 := s.App.Group("/v1")
 	apiV1.Use(authMiddleware.Auth())
+
+	apiV1.Post("/image", awsS3Handler.UploadImage())
 
 	user := apiV1.Group("/user")
 
