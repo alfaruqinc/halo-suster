@@ -65,7 +65,7 @@ func (un *userNurse) Update(ctx context.Context, db *sqlx.DB, nurse domain.Updat
 func (un *userNurse) Delete(ctx context.Context, db *sqlx.DB, nurseId string) (int64, error) {
 	query := `DELETE FROM users
 	WHERE id = $1
-	AND CAST((nip / 1e10) AS VARCHAR(3)) = '303'`
+	AND CAST(nip AS VARCHAR(3)) = '303'`
 	res, err := db.ExecContext(ctx, query, nurseId)
 	if err != nil {
 		return 0, err
@@ -82,7 +82,7 @@ func (un *userNurse) GiveAccess(ctx context.Context, db *sqlx.DB, nurse domain.A
 	query := `UPDATE users
 	SET password = $2
 	WHERE id = $1
-	AND CAST((nip / 1e10) AS VARCHAR(3)) = '303'`
+	AND CAST(nip AS VARCHAR(3)) = '303'`
 	res, err := db.ExecContext(ctx, query, nurse.ID, nurse.Password)
 	if err != nil {
 		return 0, nil

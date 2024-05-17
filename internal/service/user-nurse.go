@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"health-record/internal/domain"
+	"health-record/internal/helper"
 	"health-record/internal/repository"
 	"strconv"
 	"time"
@@ -59,7 +60,7 @@ func (un *userNurse) Register(ctx context.Context, nurse domain.UserNurse) (*dom
 }
 
 func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage) {
-	isNurseRole := (user.NIP / 1e10) == domain.NurseRole
+	isNurseRole := helper.MatchRole(user.NIP, domain.NurseRole)
 	if !isNurseRole {
 		return nil, domain.NewErrNotFound("user is not found")
 	}
@@ -106,7 +107,7 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 }
 
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
-	isNurseRole := (nurse.NIP / 1e10) == domain.NurseRole
+	isNurseRole := helper.MatchRole(nurse.NIP, domain.NurseRole)
 	if !isNurseRole {
 		return domain.NewErrNotFound("user is not nurse")
 	}
