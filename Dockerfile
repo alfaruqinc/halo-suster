@@ -1,5 +1,7 @@
 FROM golang:alpine AS builder
 
+EXPOSE 8080
+
 WORKDIR /app
 
 COPY go.mod go.sum .
