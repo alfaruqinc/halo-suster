@@ -2,6 +2,7 @@ package validation
 
 import (
 	"health-record/internal/domain"
+	"math"
 	"net/url"
 	"strconv"
 	"strings"
@@ -14,8 +15,11 @@ func NIP(fl validator.FieldLevel) bool {
 	nip := fl.Field().Int()
 	role := fl.Param()
 
-	// skip last three digits
-	nip = nip / 1000
+	nipStr := strconv.FormatInt(nip, 10)
+
+	// skip last three to last digits
+	digitSkip := len(nipStr) - 10
+	nip = nip / int64(math.Pow10(digitSkip))
 
 	// check month
 	month := nip % 100
