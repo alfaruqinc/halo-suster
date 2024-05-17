@@ -133,7 +133,7 @@ func (un *userNurse) Delete(ctx context.Context, nurseId string) domain.ErrorMes
 		return domain.NewErrInternalServerError(err.Error())
 	}
 	if affRow == 0 {
-		return domain.NewErrBadRequest("user is not nurse")
+		return domain.NewErrNotFound("nurse is not found")
 	}
 
 	return nil
@@ -155,7 +155,7 @@ func (un *userNurse) GiveAccess(ctx context.Context, nurse domain.AccessSystemUs
 		return domain.NewErrInternalServerError(err.Error())
 	}
 	if affRow == 0 {
-		return domain.NewErrBadRequest("user is not nurse")
+		return domain.NewErrNotFound("nurse is not found")
 	}
 
 	return nil
