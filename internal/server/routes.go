@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
@@ -50,6 +51,7 @@ func (s *FiberServer) RegisterFiberRoutes() {
 
 	authMiddleware := middleware.NewAuth(jwtSecret)
 
+	s.App.Use(logger.New(logger.Config{DisableColors: true}))
 	s.App.Use(recover.New())
 
 	apiV1 := s.App.Group("/v1")

@@ -41,6 +41,16 @@ func (s *awsS3) UploadImage() fiber.Handler {
 			return ctx.Status(err.Status()).JSON(err)
 		}
 
+		fileSize := file.Size
+		if fileSize < 80000 {
+			err := domain.NewErrBadRequest("filsize should more than 10KB")
+			return ctx.Status(err.Status()).JSON(err)
+		}
+		if fileSize > 8e7 {
+			err := domain.NewErrBadRequest("filsize should less than 10MB")
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
 		clientFile, err := file.Open()
 		if err != nil {
 			err := domain.NewErrInternalServerError(err.Error())
