@@ -80,7 +80,7 @@ func (uit *userIT) Register(ctx context.Context, user domain.UserIT) (*domain.Us
 }
 
 func (uit *userIT) Login(ctx context.Context, user domain.LoginUserIT) (*domain.UserITResponse, domain.ErrorMessage) {
-	isITRole := int(user.NIP/1e10) == domain.ITRole
+	isITRole := (user.NIP / 1e10) == domain.ITRole
 	if !isITRole {
 		return nil, domain.NewErrNotFound("user is not it")
 	}

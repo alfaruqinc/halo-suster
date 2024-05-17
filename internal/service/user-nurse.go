@@ -59,7 +59,7 @@ func (un *userNurse) Register(ctx context.Context, nurse domain.UserNurse) (*dom
 }
 
 func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*domain.UserNurseResponse, domain.ErrorMessage) {
-	isNurseRole := int(user.NIP/1e10) == domain.NurseRole
+	isNurseRole := (user.NIP / 1e10) == domain.NurseRole
 	if !isNurseRole {
 		return nil, domain.NewErrNotFound("user is not found")
 	}
@@ -106,7 +106,7 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 }
 
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
-	isNurseRole := int(nurse.NIP/1e10) == domain.NurseRole
+	isNurseRole := (nurse.NIP / 1e10) == domain.NurseRole
 	if !isNurseRole {
 		return domain.NewErrNotFound("user is not nurse")
 	}
@@ -133,7 +133,7 @@ func (un *userNurse) Delete(ctx context.Context, nurseId string) domain.ErrorMes
 		return domain.NewErrInternalServerError(err.Error())
 	}
 	if affRow == 0 {
-		return domain.NewErrBadRequest("user is not nurse")
+		return domain.NewErrNotFound("nurse is not found")
 	}
 
 	return nil
@@ -155,7 +155,7 @@ func (un *userNurse) GiveAccess(ctx context.Context, nurse domain.AccessSystemUs
 		return domain.NewErrInternalServerError(err.Error())
 	}
 	if affRow == 0 {
-		return domain.NewErrBadRequest("user is not nurse")
+		return domain.NewErrNotFound("nurse is not found")
 	}
 
 	return nil
