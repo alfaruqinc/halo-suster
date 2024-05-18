@@ -35,11 +35,27 @@ var (
 
 func (s *awsS3) UploadImage() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		file, err := ctx.FormFile("file")
+		headers := ctx.GetReqHeaders()
+		contentType := headers["Content-Type"]
+		contentLength := headers["Content-Length"][0]
+
+		if len(contentType) < 1 || contentLength == "0" {
+			err := domain.NewErrBadRequest("empty file")
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		form, err := ctx.MultipartForm()
 		if err != nil {
 			err := domain.NewErrInternalServerError(err.Error())
 			return ctx.Status(err.Status()).JSON(err)
 		}
+
+		files := form.File["file"]
+		if len(files) < 1 {
+			err := domain.NewErrBadRequest("empty file")
+			return ctx.Status(err.Status()).JSON(err)
+		}
+		file := files[0]
 
 		fileSize := file.Size
 		if fileSize < 80000 {
