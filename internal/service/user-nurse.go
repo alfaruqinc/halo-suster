@@ -107,10 +107,10 @@ func (un *userNurse) Login(ctx context.Context, user domain.LoginUserNurse) (*do
 }
 
 func (un *userNurse) Update(ctx context.Context, nurse domain.UpdateUserNurse) domain.ErrorMessage {
-	isNurseRole := helper.MatchRole(nurse.NIP, domain.NurseRole)
-	if !isNurseRole {
-		return domain.NewErrNotFound("user is not nurse")
-	}
+	// isNurseRole := helper.MatchRole(nurse.NIP, domain.NurseRole)
+	// if !isNurseRole {
+	// 	return domain.NewErrNotFound("user is not nurse")
+	// }
 
 	affRow, err := un.userNurseRepo.Update(ctx, un.db, nurse)
 	if err != nil {

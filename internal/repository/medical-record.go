@@ -45,14 +45,14 @@ func (mr *medicalRecord) GetAllMedicalRecords(ctx context.Context, db *sqlx.DB, 
 
 	if queryParams.IdentityDetail.IdentityNumber != "" {
 		if _, err := strconv.Atoi(queryParams.IdentityDetail.IdentityNumber); err == nil {
-			whereClause = append(whereClause, fmt.Sprintf("mp.identity_number = $%d", argPos))
+			whereClause = append(whereClause, fmt.Sprintf("mr.identity_number = $%d", argPos))
 			args = append(args, queryParams.IdentityDetail.IdentityNumber)
 			argPos++
 		}
 	}
 
 	if queryParams.CreatedBy.ID != "" {
-		whereClause = append(whereClause, fmt.Sprintf("u.id = $%d", argPos))
+		whereClause = append(whereClause, fmt.Sprintf("mr.created_by_id = $%d", argPos))
 		args = append(args, queryParams.CreatedBy.ID)
 		argPos++
 	}
@@ -71,7 +71,7 @@ func (mr *medicalRecord) GetAllMedicalRecords(ctx context.Context, db *sqlx.DB, 
 		createdAt = "ASC"
 	}
 	orderClause = append(orderClause, fmt.Sprintf("mr.created_at %s", createdAt))
-	orderClause = append(orderClause, "id DESC")
+	orderClause = append(orderClause, "mr.id DESC")
 
 	var limitOffsetClause []string
 	limit := "5"
@@ -94,19 +94,31 @@ func (mr *medicalRecord) GetAllMedicalRecords(ctx context.Context, db *sqlx.DB, 
 	args = append(args, offset)
 
 	var queryCondition string
+	var joinWhere string
 	if len(whereClause) > 0 {
-		queryCondition += "\nWHERE " + strings.Join(whereClause, " AND ")
+		joinWhere = "WHERE " + strings.Join(whereClause, " AND ")
 	}
 	queryCondition += "\nORDER BY " + strings.Join(orderClause, ", ")
-	queryCondition += "\n" + strings.Join(limitOffsetClause, " ")
+
+	subqueryMedicalRecord := fmt.Sprintf(`
+		WITH paginated_mr AS (
+			SELECT mr.id, mr.created_at, mr.identity_number, mr.symptoms, 
+				mr.medications, mr.medical_patient_id, mr.created_by_id,
+				u.nip
+			FROM medical_records mr
+			JOIN users u ON u.id = mr.created_by_id
+			%s
+			%s
+		)
+	`, joinWhere, strings.Join(limitOffsetClause, " "))
 
 	query := `SELECT mr.created_at, mr.symptoms, mr.medications,
-	mp.identity_number, mp.phone_number, mp.name, mp.birth_date, mp.gender, mp.id_card_img,
-	u.id, u.nip, u.name
-	FROM medical_records mr
+		mp.identity_number, mp.phone_number, mp.name, mp.birth_date, mp.gender, mp.id_card_img,
+		u.id, u.nip, u.name
+	FROM paginated_mr mr
 	JOIN medical_patients mp ON mp.id = mr.medical_patient_id
 	JOIN users u ON u.id = mr.created_by_id`
-	query += queryCondition
+	query = subqueryMedicalRecord + query + queryCondition
 
 	rows, err := db.QueryxContext(ctx, query, args...)
 	if err != nil {
