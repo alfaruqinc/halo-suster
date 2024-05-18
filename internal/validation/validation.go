@@ -42,6 +42,10 @@ func NIP(fl validator.FieldLevel) bool {
 	}
 	nip = nip / 10
 
+	// pass if role is not provided
+	if role == "" {
+		return true
+	}
 	// check role
 	itRole := role == "it" && nip == domain.ITRole
 	nurseRole := role == "nurse" && nip == domain.NurseRole
