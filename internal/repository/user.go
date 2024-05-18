@@ -65,6 +65,7 @@ func (u *user) GetAllUser(ctx context.Context, db *sqlx.DB, queryParams domain.U
 		createdAt = "ASC"
 	}
 	orderClause = append(orderClause, fmt.Sprintf("created_at %s", createdAt))
+	orderClause = append(orderClause, "id DESC")
 
 	// PAGINATION
 	var limitOffsetClause []string

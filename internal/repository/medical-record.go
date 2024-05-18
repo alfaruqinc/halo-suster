@@ -71,6 +71,7 @@ func (mr *medicalRecord) GetAllMedicalRecords(ctx context.Context, db *sqlx.DB, 
 		createdAt = "ASC"
 	}
 	orderClause = append(orderClause, fmt.Sprintf("mr.created_at %s", createdAt))
+	orderClause = append(orderClause, "id DESC")
 
 	var limitOffsetClause []string
 	limit := "5"
