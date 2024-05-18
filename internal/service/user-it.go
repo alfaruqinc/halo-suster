@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"health-record/internal/domain"
+	"health-record/internal/helper"
 	"health-record/internal/repository"
 	"strconv"
 	"time"
@@ -80,7 +81,7 @@ func (uit *userIT) Register(ctx context.Context, user domain.UserIT) (*domain.Us
 }
 
 func (uit *userIT) Login(ctx context.Context, user domain.LoginUserIT) (*domain.UserITResponse, domain.ErrorMessage) {
-	isITRole := (user.NIP / 1e10) == domain.ITRole
+	isITRole := helper.MatchRole(user.NIP, domain.ITRole)
 	if !isITRole {
 		return nil, domain.NewErrNotFound("user is not it")
 	}

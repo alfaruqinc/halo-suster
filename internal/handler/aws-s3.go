@@ -35,18 +35,34 @@ var (
 
 func (s *awsS3) UploadImage() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		file, err := ctx.FormFile("file")
+		headers := ctx.GetReqHeaders()
+		contentType := headers["Content-Type"]
+		contentLength := headers["Content-Length"][0]
+
+		if len(contentType) < 1 || contentLength == "0" {
+			err := domain.NewErrBadRequest("empty file")
+			return ctx.Status(err.Status()).JSON(err)
+		}
+
+		form, err := ctx.MultipartForm()
 		if err != nil {
 			err := domain.NewErrInternalServerError(err.Error())
 			return ctx.Status(err.Status()).JSON(err)
 		}
 
+		files := form.File["file"]
+		if len(files) < 1 {
+			err := domain.NewErrBadRequest("empty file")
+			return ctx.Status(err.Status()).JSON(err)
+		}
+		file := files[0]
+
 		fileSize := file.Size
-		if fileSize < 80000 {
+		if fileSize < 10000 {
 			err := domain.NewErrBadRequest("filsize should more than 10KB")
 			return ctx.Status(err.Status()).JSON(err)
 		}
-		if fileSize > 8e7 {
+		if fileSize > 1e7 {
 			err := domain.NewErrBadRequest("filsize should less than 10MB")
 			return ctx.Status(err.Status()).JSON(err)
 		}
@@ -81,13 +97,14 @@ func (s *awsS3) UploadImage() fiber.Handler {
 
 		client := s3.NewFromConfig(cfg)
 
+		filename := uuid.New().String() + fileExtension
 		client.PutObject(context.TODO(), &s3.PutObjectInput{
 			Bucket: aws.String(awsS3BucketName),
 			Key:    aws.String(uuid.New().String() + fileExtension),
 			Body:   clientFile,
 		})
 
-		respUpload := domain.NewStatusOK("success upload image", map[string]string{"imageUrl": "test"})
+		respUpload := domain.NewStatusOK("success upload image", map[string]string{"imageUrl": filename})
 
 		return ctx.Status(respUpload.Status()).JSON(respUpload)
 	}

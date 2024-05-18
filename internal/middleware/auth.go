@@ -77,7 +77,7 @@ func (a *auth) Auth() fiber.Handler {
 
 func customAuthError(ctx *fiber.Ctx, err error) error {
 	if err.Error() == jwtware.ErrJWTMissingOrMalformed.Error() {
-		missingOrMalformed := domain.NewErrBadRequest(jwtware.ErrJWTMissingOrMalformed.Error())
+		missingOrMalformed := domain.NewErrUnauthorized(jwtware.ErrJWTMissingOrMalformed.Error())
 		return ctx.Status(missingOrMalformed.Status()).JSON(missingOrMalformed)
 	}
 	invalidOrExpired := domain.NewErrUnauthorized("Invalid or expired JWT")

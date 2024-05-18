@@ -42,7 +42,7 @@ type UserNurseResponse struct {
 
 type UpdateUserNurse struct {
 	ID   string `json:"id"`
-	NIP  int64  `json:"nip" validate:"required,nip=nurse"`
+	NIP  int64  `json:"nip" validate:"required,nip"`
 	Name string `json:"name" validate:"required,min=5,max=50"`
 }
 
