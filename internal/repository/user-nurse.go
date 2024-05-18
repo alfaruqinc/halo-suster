@@ -49,7 +49,8 @@ func (un *userNurse) Update(ctx context.Context, db *sqlx.DB, nurse domain.Updat
 	query := `UPDATE users
 	SET nip = $2,
 	name = $3
-	WHERE id = $1`
+	WHERE id = $1
+	AND CAST(nip AS VARCHAR(3)) = '303'`
 	res, err := db.ExecContext(ctx, query, nurse.ID, nurse.NIP, nurse.Name)
 	if err != nil {
 		return 0, err
